@@ -1,0 +1,67 @@
+use EPrints;
+
+use strict;
+
+my $repo = EPrints::Session->new();
+
+my $content = "text/xml";
+$repo->send_http_header( content_type=>$content );
+
+my @params = $repo->param;
+my $pid = lc $repo->param( "pid" );
+
+
+my $rows = [];
+my $limit = 20;
+
+$rows = lookup_pid( $repo, $pid, $limit );
+
+my $ul = EPrints::Extras::render_lookup_list( $repo, $rows );
+$repo->send_http_header( content_type => "text/xml; charset=UTF-8" );
+
+binmode(STDOUT,":utf8");
+print <<END;
+<?xml version="1.0" encoding="UTF-8" ?>
+
+END
+print EPrints::XML::to_string( $ul, "utf-8", 1 );
+
+EPrints::XML::dispose( $ul );
+
+$repo->terminate;
+
+sub lookup_pid
+{
+        my ( $repo, $pid, $limit ) = @_;
+
+        my $rows = [];
+
+        my $database = $repo->get_database;
+
+        my $sql = "select eprint_id from symplectic_pids where pid = ".$pid;
+
+        my $project_name = "Find EPrints ID";
+
+        my $sth = $database->prepare_select( $sql, 'limit' => $limit );
+        $database->execute( $sth , $sql );
+        while( my @row = $sth->fetchrow_array )
+        {
+                my $project_name = @row[0];
+
+                my $frag = $repo->make_doc_fragment;
+
+                $frag->appendChild( $repo->html_phrase( 'cgi/lookup/rioxx2_project:found', count => $repo->make_text( 1 ) ) );
+
+                my $item = {};
+                push @$rows, $item;
+                $item->{xhtml} = $frag;
+                $item->{values} = [
+                        "for:value:relative:_project" => $project_name,
+                ];
+        }
+        $sth->finish();
+
+        return $rows;
+}
+
+
