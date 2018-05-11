@@ -12,6 +12,10 @@
 #
 #  __LICENSE__
 #
+# Replace YYY with your repository ID
+#
+# Replace XXXXXXXX with your Core API Key
+#
 ######################################################################
 
 use EPrints;
@@ -26,9 +30,9 @@ exit( 0 ) unless( defined $session );
 our @eprints = ();
 our $test_search = '"Blue Whale"';
 
-my $searchroot_url = "https://core.ac.uk:443/api-v2/articles/search/repositories.id%3A129%20AND%20";
+my $searchroot_url = "https://core.ac.uk:443/api-v2/articles/search/repositories.id%3AYYY%20AND%20";
 
-my $searchterms_url = "?page=1&pageSize=20&metadata=true&fulltext=false&citations=false&similar=false&duplicate=false&urls=false&faithfulMetadata=false&apiKey=0CI921SJM6BracHpq5XjFu7oNWgQEt4b";
+my $searchterms_url = "?page=1&pageSize=20&metadata=true&fulltext=false&citations=false&similar=false&duplicate=false&urls=false&faithfulMetadata=false&apiKey=XXXXXXXX";
 
 
 our $search_term ;
