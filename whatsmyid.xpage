@@ -1,0 +1,73 @@
+<xpage:page xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:xpage="http://eprints.org/ep3/xpage"
+  xmlns:epc="http://eprints.org/ep3/control">
+<xpage:title>What is my ID</xpage:title>
+<xpage:body>
+
+<h3>Find an Elements ID</h3>
+
+<form action="">
+EPrint ID: <input type="text" id="txt1" onkeyup="showHint(this.value)"/>
+</form>
+
+<p>Suggestions: <span id="txtHint"></span></p>
+
+<script>
+//<![CDATA[
+function showHint(str) {
+  var xhttp;
+  if (str.length == 0) {
+    document.getElementById("txtHint").innerHTML = "";
+    return;
+  }
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("txtHint").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "/cgi/elements/lookup_pid?eprint_id="+str, true);
+  xhttp.send();
+}
+//]]>
+</script>
+<br />
+<br />
+<br />
+<hr />
+<br />
+<br />
+<br />
+
+<h3>Find an EPrints ID</h3>
+
+<form action="">
+Elements ID: <input type="text" id="txt1" onkeyup="showHint2(this.value)"/>
+</form>
+
+<p>Suggestions: <span id="txt2Hint"></span></p>
+
+<script>
+//<![CDATA[
+function showHint2(str) {
+  var xhttp;
+  if (str.length == 0) {
+    document.getElementById("txt2Hint").innerHTML = "";
+    return;
+  }
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("txt2Hint").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "/cgi/elements/lookup_eprintid?pid="+str, true);
+  xhttp.send();
+}
+//]]>
+</script>
+
+
+
+</xpage:body>
+</xpage:page>
